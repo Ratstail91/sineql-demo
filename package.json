@@ -4,7 +4,10 @@
   "description": "",
   "main": "server/index.js",
   "scripts": {
-    "start": "node server/index.js"
+    "start": "node server/index.js",
+	"docker": "npm run docker:build && npm run docker:push",
+    "docker:build": "docker buildx build . --platform linux/amd64 --tag docker.krgamestudios.com/krgamestudios/sineql-demo:latest",
+    "docker:push": "docker push docker.krgamestudios.com/krgamestudios/sineql-demo:latest"
   },
   "keywords": [],
   "author": "",
