@@ -1,0 +1,3 @@
+CREATE DATABASE IF NOT EXISTS sineql;
+CREATE USER IF NOT EXISTS 'sineql'@'%' IDENTIFIED BY 'bulbasaur';
+GRANT ALL PRIVILEGES ON sineql.* TO 'sineql'@'%';

@@ -1,8 +1,9 @@
 const fetch = require('node-fetch');
 
-const Weather = async (query, typeGraph) => {
+const queryWeather = async (query, typeGraph) => {
 	let q = null;
 
+	//find location
 	if (query.city && query.city.match) {
 		q = query.city.match;
 	} else if (query.latitude && query.latitude.match && query.longitude && query.longitude.match) {
@@ -11,15 +12,16 @@ const Weather = async (query, typeGraph) => {
 		throw 'Unknown location';
 	}
 
+	//get the data
 	const response = await fetch(`http://api.weatherapi.com/v1/current.json?key=${process.env.WEATHER_KEY}&q=${q}`);
-
 	const data = await response.json();
 
 	//return value
 	const result = {
-		//
+		//EMPTY
 	};
 
+	//pick out each valid field
 	if (query.last_updated) {
 		result['last_updated'] = data.current.last_updated;
 	}
@@ -45,6 +47,13 @@ const Weather = async (query, typeGraph) => {
 	return result;
 };
 
+const changeWeather = async (query, typeGraph) => {
+	throw "You can't change the weather!";
+}
+
 module.exports = {
-	Weather,
+	queryWeather,
+	createWeather: changeWeather,
+	updateWeather: changeWeather,
+	deleteWeather: changeWeather,
 };

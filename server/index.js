@@ -8,13 +8,16 @@ const app = express();
 //uses text input
 app.use(express.text());
 
+//database connection
+const database = require('./database');
+
 //test the library
 const sineQL = require('sineql');
 const schema = require('./schema.js');
-const queryHandlers = require('./query-handlers.js');
+const typeHandlers = require('./type-handlers');
 
 //omit 'createHandlers', 'updateHandlers' or 'deleteHandlers' to disable those methods
-const sine = sineQL(schema, { queryHandlers });
+const sine = sineQL(schema, typeHandlers, { debug: true });
 
 //open the endpoint
 app.post('/sineql', async (req, res) => {
@@ -24,6 +27,7 @@ app.post('/sineql', async (req, res) => {
 
 //startup
 const port = process.env.WEB_PORT || 4000;
-app.listen(port, err => {
+app.listen(port, async err => {
+	await database.sync();
 	console.log(`listening to *:${port}`);
 });
