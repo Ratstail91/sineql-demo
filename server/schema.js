@@ -14,17 +14,14 @@ type Weather {
 	String wind_dir
 }
 
-scalar Index
 scalar Date
 
 type Book {
-	Index index
 	String title
 	Date published
 }
 
 type Author {
-	Index index
 	String name
 	Book books
 }
