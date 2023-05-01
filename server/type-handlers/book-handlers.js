@@ -97,6 +97,7 @@ const createBook = async (query, typeGraph) => {
 
 const updateBookFields = (query) => {
 	const final = [];
+	let fields = [];
 
 	query.forEach((q) => {
 		//the array of objects to update
@@ -133,14 +134,15 @@ const updateBookFields = (query) => {
 		;
 
 		final.push({ ...updates, ...where });
+		fields = fields.concat(Object.keys(updates));
 	});
 
-	return { updates: final, updateOnDuplicate: Object.keys(updates) };
+	return { updates: final, updateOnDuplicate: fields };
 };
 
 const updateBook = async (query, typeGraph) => {
 	const { updates, ...opts } = updateBookFields(query);
-
+console.log(opts)
 	try {
 		await Book.bulkCreate(
 			updates,

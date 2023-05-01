@@ -1,20 +1,4 @@
-POST http://sineql-demo.krgamestudios.com/sineql HTTP/1.1
-Content-Type: text/plain
-
-update Book [
-	{
-		match title "foo"
-		update published "2020-01-01"
-	}
-	{
-		match title "Bar"
-		update published "2021-01-01"
-	}
-]
-
-###
-
-POST http://sineql-demo.krgamestudios.com/sineql HTTP/1.1
+POST http://localhost:4000/sineql HTTP/1.1
 Content-Type: text/plain
 
 Book {
@@ -27,6 +11,94 @@ Book {
 POST http://localhost:4000/sineql HTTP/1.1
 Content-Type: text/plain
 
-Book {
-	title
-}
+create Book [
+	{
+		create title "The Philosophers Kidney Stone"
+	}
+	{
+		create title "The Chamber Pot of Secrets"
+	}
+	{
+		create title "The Prisoner of Aunt Kazban"
+	}
+	{
+		create title "The Goblet of the Fire Cocktail"
+	}
+	{
+		create title "The Order for Kleenex"
+	}
+	{
+		create title "The Half-Priced Pharmacy"
+	}
+	{
+		create title "Yeah, I Got Nothing"
+	}
+]
+
+###
+
+POST http://localhost:4000/sineql HTTP/1.1
+Content-Type: text/plain
+
+update Book [
+	{
+		match title "The Philosophers Kidney Stone"
+		update published "1969-04-21"
+	}
+	{
+		match title "The Chamber Pot of Secrets"
+		update published "1969-04-22"
+	}
+	{
+		match title "The Prisoner of Aunt Kazban"
+		update published "1969-04-23"
+	}
+	{
+		match title "The Goblet of the Fire Cocktail"
+		update published "1969-04-24"
+	}
+	{
+		match title "The Order for Kleenex"
+		update published "1969-04-25"
+	}
+	{
+		match title "The Half-Priced Pharmacy"
+		update published "1969-04-26"
+	}
+	{
+		match title "Yeah, I Got Nothing"
+		update published "1969-04-27"
+	}
+]
+
+###
+
+POST http://localhost:4000/sineql HTTP/1.1
+Content-Type: text/plain
+
+delete Book [
+	{
+		match title "The Philosophers Kidney Stone"
+	}
+	{
+		match title "The Chamber Pot of Secrets"
+	}
+	{
+		match title "The Prisoner of Aunt Kazban"
+	}
+	{
+		match title "The Goblet of the Fire Cocktail"
+	}
+	{
+		match title "The Order for Kleenex"
+	}
+	{
+		match title "The Half-Priced Pharmacy"
+	}
+	{
+		match title "Yeah, I Got Nothing"
+	}
+]
+
+###
+
