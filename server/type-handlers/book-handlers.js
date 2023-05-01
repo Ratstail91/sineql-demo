@@ -96,11 +96,13 @@ const createBook = async (query, typeGraph) => {
 };
 
 const updateBookFields = (query) => {
-	//the array of objects to update
-	const updates = {};
-	const where = {};
+	const final = [];
 
 	query.forEach((q) => {
+		//the array of objects to update
+		const updates = {};
+		const where = {};
+
 		//just in case
 		if (!q.update && !q.match) {
 			throw 'Unexpected field (expected an update or match keyword)';
@@ -129,9 +131,11 @@ const updateBookFields = (query) => {
 				}
 			})
 		;
+
+		final.push({ ...updates, ...where });
 	});
 
-	return { updates: [{ ...updates, ...where }], updateOnDuplicate: Object.keys(updates) };
+	return { updates: final, updateOnDuplicate: Object.keys(updates) };
 };
 
 const updateBook = async (query, typeGraph) => {

@@ -1,8 +1,25 @@
 POST http://sineql-demo.krgamestudios.com/sineql HTTP/1.1
 Content-Type: text/plain
 
+update Book [
+	{
+		match title "foo"
+		update published "2020-01-01"
+	}
+	{
+		match title "Bar"
+		update published "2021-01-01"
+	}
+]
+
+###
+
+POST http://sineql-demo.krgamestudios.com/sineql HTTP/1.1
+Content-Type: text/plain
+
 Book {
 	title
+	published
 }
 
 ###
