@@ -1,0 +1,7 @@
+DB_HOSTNAME=localhost
+DB_DATABASE=sineql
+DB_USERNAME=sineql
+DB_PASSWORD=bulbasaur
+DB_TIMEZONE=Australia/Sydney
+
+WEATHER_KEY=

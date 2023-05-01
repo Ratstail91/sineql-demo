@@ -12,8 +12,9 @@ module.exports = sequelize.define('book', {
 
 	title: {
 		type: Sequelize.TEXT,
-		allowNull: true,
-		defaultValue: null
+		allowNull: false,
+		defaultValue: null,
+		unique: true,
 	},
 
 	published: {

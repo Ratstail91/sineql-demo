@@ -16,7 +16,7 @@ const sineQL = require('sineql');
 const schema = require('./schema.js');
 const typeHandlers = require('./type-handlers');
 
-//omit 'createHandlers', 'updateHandlers' or 'deleteHandlers' to disable those methods
+//omit 'queryHandlers', 'createHandlers', 'updateHandlers' or 'deleteHandlers' to disable those methods
 const sine = sineQL(schema, typeHandlers, { debug: true });
 
 //open the endpoint

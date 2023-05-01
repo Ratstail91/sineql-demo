@@ -3,7 +3,7 @@ const { Book } = require('../database/models');
 //utils
 const checkDateFormat = date => /(19\d{2}|20\d{2})[-\/.](0[1-9]|1[012])[-\/.](0[1-9]|[12][0-9]|3[01])/.test(date) || date == 'NULL';
 
-const queryBook = async (query, typeGraph) => {
+const queryBookFields = (query) => {
 	//sequelize stuff to find
 	const attributes = [];
 	const where = {};
@@ -25,17 +25,26 @@ const queryBook = async (query, typeGraph) => {
 		})
 	;
 
-	//search the database
-	const result = await Book.findAll({
-		attributes: attributes,
-		where: where,
-	});
-
-	//finally
-	return result.map(book => book.dataValues);
+	return { attributes, where };
 };
 
-const createBook = async (query, typeGraph) => {
+const queryBook = async (query, typeGraph) => {
+	const bookFields = queryBookFields(query);
+
+	try {
+		//search the database
+		return await Book.findAll({
+			...bookFields,
+			raw: true,
+		});
+	}
+	catch(e) {
+		console.log(e);
+		throw "Query failed";
+	}
+};
+
+const createBookFields = (query) => {
 	//the array of objects to insert
 	const inserts = [];
 
@@ -66,40 +75,32 @@ const createBook = async (query, typeGraph) => {
 		;
 	});
 
-	//insert into the database
-	const results = await Book.bulkCreate(inserts, { fields: ['title', 'published']});
-
-	//determine what fields to return
-	const returns = [];
-
-	query.map((q, idx) => {
-		//make sure it exists
-		returns[idx] = returns[idx] || {};
-
-		//specify fields to return in each record
-		const keys = Object.keys(q)
-			.filter(key => key != 'typeName' && key != 'create') //filter out these meta-fields
-			.forEach(key => {
-				if (q[key].scalar) {
-					returns[idx][key] = results[idx][key];
-				}
-			})
-		;
-	});
-
-	//finally
-	return returns;
+	return inserts;
 };
 
-const updateBook = async (query, typeGraph) => {
-	//total updated
-	const totals = [];
+const createBook = async (query, typeGraph) => {
+	const bookFields = createBookFields(query);
 
-	const promises = query.map(async (q, idx) => {
-		//the array of objects to update
-		const updates = {};
-		const where = {};
+	try {
+		//insert into the database
+		await Book.bulkCreate(
+			bookFields,
+		);
+	}
+	catch(e) {
+		console.log(e);
+		throw "Create failed";
+	}
 
+	return "OK";
+};
+
+const updateBookFields = (query) => {
+	//the array of objects to update
+	const updates = {};
+	const where = {};
+
+	query.forEach((q) => {
 		//just in case
 		if (!q.update && !q.match) {
 			throw 'Unexpected field (expected an update or match keyword)';
@@ -107,7 +108,7 @@ const updateBook = async (query, typeGraph) => {
 
 		//specify fields to update
 		Object.keys(q)
-			.filter(key => key != 'typeName' && key != 'create') //filter out these meta-fields
+			.filter(key => key != 'typeName' && key != 'update') //filter out these meta-fields
 			.forEach(key => {
 				//check published date format
 				if (key == 'published') {
@@ -128,24 +129,32 @@ const updateBook = async (query, typeGraph) => {
 				}
 			})
 		;
-
-		//update the database
-		const [updated] = await Book.update(updates, { where });
-
-		totals.push(updated);
 	});
 
-	await Promise.all(promises);
+	return { updates: [{ ...updates, ...where }], updateOnDuplicate: Object.keys(updates) };
+};
+
+const updateBook = async (query, typeGraph) => {
+	const { updates, ...opts } = updateBookFields(query);
+
+	try {
+		await Book.bulkCreate(
+			updates,
+			opts,
+		);
+	}
+	catch(e) {
+		console.log(e);
+		throw "Update failed";
+	}
 
 	//finally
-	return { totals };
+	return "OK";
 };
 
 const deleteBook = async (query, typeGraph) => {
-	//total updated
-	const totals = [];
-
-	const promises = query.map(async (q, idx) => {
+	//can handle multiple delete queries at once, so keep it like this
+	const promises = query.map(async (q) => {
 		//the array of objects to delete
 		const where = {};
 
@@ -173,15 +182,19 @@ const deleteBook = async (query, typeGraph) => {
 		;
 
 		//update the database
-		const deleted = await Book.destroy({ where });
-
-		totals.push(deleted);
+		await Book.destroy({ where });
 	});
 
-	await Promise.all(promises);
+	try {
+		await Promise.all(promises);
+	}
+	catch(e) {
+		console.log(e);
+		throw "Delete failed";
+	}
 
 	//finally
-	return { totals };
+	return "OK";
 };
 
 module.exports = {

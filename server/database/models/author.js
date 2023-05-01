@@ -12,7 +12,8 @@ module.exports = sequelize.define('author', {
 
 	name: {
 		type: Sequelize.TEXT,
-		allowNull: true,
-		defaultValue: null
+		allowNull: false,
+		defaultValue: null,
+		unique: true,
 	}
 });

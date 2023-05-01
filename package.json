@@ -5,6 +5,7 @@
   "main": "server/index.js",
   "scripts": {
     "start": "node server/index.js",
+    "dev": "nodemon server/index.js",
     "docker": "npm run docker:build && npm run docker:push",
     "docker:build": "docker buildx build . --platform linux/amd64 --tag docker.krgamestudios.com/krgamestudios/sineql-demo:latest",
     "docker:push": "docker push docker.krgamestudios.com/krgamestudios/sineql-demo:latest"
@@ -19,5 +20,8 @@
     "node-fetch": "^2.6.8",
     "sequelize": "^6.28.0",
     "sineql": "^1.0.4"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
   }
 }
