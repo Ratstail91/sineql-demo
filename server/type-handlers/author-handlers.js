@@ -49,10 +49,7 @@ const queryAuthor = async (query, typeGraph) => {
 
 	try {
 		//search the database
-		return await Author.findAll({
-			...authorFields,
-			raw: true,
-		});
+		return await Author.findAll(authorFields);
 	}
 	catch(e) {
 		console.log(e);

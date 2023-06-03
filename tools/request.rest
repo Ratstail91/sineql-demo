@@ -78,7 +78,7 @@ Content-Type: text/plain
 
 create Author [
 	{
-		create name "Just Kidding"
+		create name "Just Kidding 'Round"
 		match books [
 			{
 				match title "Yeah, I Got Nothing"
@@ -95,3 +95,13 @@ create Author [
 
 ###
 
+POST https://sineql-demo.krgamestudios.com/sineql HTTP/1.1
+Content-Type: text/plain
+
+Author {
+	name
+	books {
+		title
+		published
+	}
+}
