@@ -1,7 +1,7 @@
 const { Book } = require('../database/models');
 
 //utils
-const checkDateFormat = date => /(19\d{2}|20\d{2})[-\/.](0[1-9]|1[012])[-\/.](0[1-9]|[12][0-9]|3[01])/.test(date) || date == 'NULL';
+const checkDateFormat = date => /(19\d{2}|20\d{2})[-\/.](0[1-9]|1[012])[-\/.](0[1-9]|[12][0-9]|3[01])/.test(date) || date.toString().toUpperCase() == 'NULL';
 
 const queryBookFields = (query) => {
 	//sequelize stuff to find
@@ -10,6 +10,7 @@ const queryBookFields = (query) => {
 
 	//specify fields to find
 	Object.keys(query)
+		.filter(key => query[key])
 		.filter(key => key != 'typeName') //filter out this meta-field
 		.forEach(key => {
 			//all book members queried should be scalar
@@ -142,7 +143,7 @@ const updateBookFields = (query) => {
 
 const updateBook = async (query, typeGraph) => {
 	const { updates, ...opts } = updateBookFields(query);
-console.log(opts)
+
 	try {
 		await Book.bulkCreate(
 			updates,
@@ -182,7 +183,7 @@ const deleteBook = async (query, typeGraph) => {
 
 				//filter the members to a specific value
 				if (q[key].match) {
-					where[key] = q[key].match == 'NULL' ? null : q[key].match;
+					where[key] = q[key].match.toString().toUpperCase() == 'NULL' ? null : q[key].match;
 				}
 			})
 		;
@@ -208,4 +209,6 @@ module.exports = {
 	createBook,
 	updateBook,
 	deleteBook,
+
+	queryBookFields,
 };

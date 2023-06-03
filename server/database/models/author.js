@@ -1,7 +1,9 @@
 const Sequelize = require('sequelize');
 const sequelize = require('..');
 
-module.exports = sequelize.define('author', {
+const Book = require("./book");
+
+const Author = sequelize.define('author', {
 	index: {
 		type: Sequelize.INTEGER(11),
 		allowNull: false,
@@ -17,3 +19,7 @@ module.exports = sequelize.define('author', {
 		unique: true,
 	}
 });
+
+Author.hasMany(Book);
+
+module.exports = Author;

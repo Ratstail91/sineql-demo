@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const sequelize = require('..');
 
-module.exports = sequelize.define('book', {
+const Book = sequelize.define('book', {
 	index: {
 		type: Sequelize.INTEGER(11),
 		allowNull: false,
@@ -23,3 +23,5 @@ module.exports = sequelize.define('book', {
 		defaultValue: null
 	}
 });
+
+module.exports = Book;
